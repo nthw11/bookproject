@@ -1,15 +1,19 @@
-import { Schema as _Schema, model } from "mongoose";
+import { ObjectId } from "mongodb";
+import mongoose, { Schema as _Schema, model, mongo } from "mongoose";
 const Schema = _Schema
 
 const BookSchema = new Schema({
-  bookName: {type: String, required: true},
-  author: [{
-    authorFName: {type: String},
-    authorMName: {type: String},
-    authorLName: {type: String}
+  _id: {type: String},
+  title: {type: String, required: true},
+  subtitle: {type: String},
+  authors: [{
+    authorFName: String,
+    authorMName: String,
+    authorLName: String
   }],
   pageCount: {type: Number},
   publishedDate: { type: Date},
+  description: {type: String},
   series: {type: String},
   categories: [{type: String}],
   imageLinks:{
@@ -40,4 +44,4 @@ const BookSchema = new Schema({
 
 })
 
-module.exports = mongoose.model('Book', BookSchema)
+export default mongoose.model('Book', BookSchema)

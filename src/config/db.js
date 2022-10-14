@@ -1,14 +1,18 @@
 import mongoose from 'mongoose';
-require('dotenv').config()
+
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 
 const dbConnection = process.env.MONGO_DB_CONNECTION
 
-const connectDB = async () => {
+export default function connectDB() {
   try {
-    await mongoose.connect(dbConnection, {
+    mongoose.connect(dbConnection, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
+    console.log(dbConnection)
     console.log(`DATABASE CONNECTED`)
   } catch (error) {
     console.log(error.message)
@@ -16,4 +20,4 @@ const connectDB = async () => {
   }
 }
 
-module.exports = connectDB
+// module.exports = connectDB

@@ -11,7 +11,8 @@ const UserSchema = new Schema({
   contacts: [{type: Schema.Types.ObjectId, ref: 'User'}],
   clubs: [{type: Schema.Types.ObjectId, ref: 'Club'}],
   books: [{ type: Schema.Types.ObjectId, ref: 'Book'}],
-  tags: [{ type: String}]
+  tags: [{ type: String}],
+  password: {type: String}
 })
 
-module.exports = mongoose.model('User', UserSchema)
+export default mongoose.model('User', UserSchema)
