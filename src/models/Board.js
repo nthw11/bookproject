@@ -1,4 +1,4 @@
-import { Schema as _Schema, model } from "mongoose";
+import mongoose, { Schema as _Schema, model } from "mongoose";
 const Schema = _Schema
 
 const BoardSchema = new Schema({
@@ -6,4 +6,4 @@ const BoardSchema = new Schema({
   boardMessages: [{type: Schema.Types.ObjectId, ref: 'Messages'}]
 })
 
-module.exports = mongoose.model('Board', BoardSchema)
+export default mongoose.model('Board', BoardSchema)

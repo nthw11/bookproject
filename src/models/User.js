@@ -1,5 +1,7 @@
 import mongoose, { Schema as _Schema, model, mongo } from "mongoose";
+const BookSchema = './Book.js'
 const Schema = _Schema
+
 
 const UserSchema = new Schema({
   username: { type: String, reqired: true, unique: true},
@@ -9,8 +11,9 @@ const UserSchema = new Schema({
   phone: { type: String},
   avatarUrl: {type: String},
   contacts: [{type: Schema.Types.ObjectId, ref: 'User'}],
+  blockedContacts: [{type: Schema.Types.ObjectId, ref: 'User'}],
   clubs: [{type: Schema.Types.ObjectId, ref: 'Club'}],
-  books: [{ type: Schema.Types.ObjectId, ref: 'Book'}],
+  books: [BookSchema],
   tags: [{ type: String}],
   password: {type: String}
 })

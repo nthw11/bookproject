@@ -12,7 +12,6 @@ export default function connectDB() {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
-    console.log(dbConnection)
     console.log(`DATABASE CONNECTED`)
   } catch (error) {
     console.log(error.message)

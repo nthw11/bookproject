@@ -5,7 +5,8 @@ import connectDB from './src/config/db.js'
 
 import testRoutes from './src/routes/test.js'
 import userRoutes from './src/routes/user.js'
-
+import clubRoutes from './src/routes/club.js'
+import boardRoutes from './src/routes/boards.js'
 
 const app = express()
 const PORT = 8000
@@ -32,6 +33,8 @@ app.use(bodyParser.json())
 
 app.use("/test", testRoutes)
 app.use("/user", userRoutes)
+app.use("/club", clubRoutes)
+app.use("/board", boardRoutes)
 
 export default app.listen(PORT, () =>{ 
   console.log(`app is listening on port ${PORT}`)

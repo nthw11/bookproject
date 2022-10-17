@@ -6,6 +6,64 @@ import crypto from 'crypto'
 const router = express.Router()
 
 router
+// POST add new user
+  .post('/', async (req, res, next) => {
+    const {
+      username,
+      firstname,
+      lastname,
+      email,
+      phone,
+      avatarUrl,
+      password
+    } = req.body
+    const newUser = new User({
+      username,
+      firstname,
+      lastname,
+      email,
+      phone,
+      avatarUrl,
+      password
+    }).save((err, user) => {
+      if(err){
+        return next(err)
+      } else {
+        res.status(200).send(user)
+      }
+    })
+  })
+
+
+  // PUT Edit user info
+  .put('/:userId', async (req, res, next) => {
+    const userId = req.params.userId
+    const {
+      firstname,
+      lastname,
+      email,
+      phone,
+      avatarUrl,
+      password
+    } = req.body
+    const update = {
+      firstname,
+      lastname,
+      email,
+      phone,
+      avatarUrl,
+      password
+    }
+    const updatedUser = await User.findByIdAndUpdate({_id: userId}, update, {new: true}, function (err, response) {
+      if(err){
+        res.status(400).send(err)
+      } else {
+        res.status(200).send(response)
+      }
+    })
+  })
+
+// POST add new book by userId
   .post('/:userId/add-book', async (req, res, next) => {
     const userId = req.params.userId
     const { 
@@ -14,69 +72,90 @@ router
       authors,
       pageCount,
       publishedDate,
-      description,
-      series,
       categories,
-      imageLinks,
-      language,
+      imageLink,
       publisher,
-      retail,
       userRating,
-      tags
-       } = req.body
-    // const newBook ={
-    //   _id: crypto.randomUUID(),  
-    //   title: title,
-    //   subtitle: subtitle,
-    //   authors: [{authors}],
-    //   pageCount: pageCount,
-    //   publishedDate: publishedDate,
-    //   description: description,
-    //   series: series,
-    //   categories: categories,
-    //   imageLinks: imageLinks,
-    //   language: language,
-    //   publisher: publisher,
-    //   retail: retail,
-    //   userRating: userRating,
-    //   tags: tags }
-
-      const updateBook = new Book()
-      updateBook._id = crypto.randomUUID()
-      updateBook.title = title
-      updateBook.subtitle = subtitle
-      updateBook.authors = [{authors}]
-      updateBook.pageCount = pageCount
-      updateBook.publishedDate = publishedDate
-      updateBook.description = description
-      updateBook.series = series
-      updateBook.categories = categories
-      updateBook.imageLinks = imageLinks
-      updateBook.language = language
-      updateBook.publisher = publisher
-      updateBook.retail = retail
-      updateBook.userRating = userRating
-      updateBook.tags = tags
-
-      updateBook.save((err, book) => {
+      tags,
+      notes
+      } = req.body
+      const bookToAdd = new Book({})
+      bookToAdd.title = title
+      bookToAdd.subtitle = subtitle
+      bookToAdd.authors = [authors]
+      bookToAdd.pageCount = pageCount
+      bookToAdd.publishedDate = publishedDate
+      bookToAdd.categories = [categories]
+      bookToAdd.imageLink = imageLink
+      bookToAdd.publisher = publisher
+      bookToAdd.userRating = userRating
+      bookToAdd.tags = [tags]
+      bookToAdd.notes = [notes]
+      
+      const user = await User.findById(userId)
+      user.books.push(bookToAdd)
+      user.save((err, user) => {
         if(err) {
           res.status(400).send(err)
           return next(err)
         } else {
-          // User.findByIdAndUpdate(userId)
-          //   ({ $push: { books: [newBook._id]}}).exec((err, user) => {
-          //     if(err) {
-          //       res.status(400).send(err)
-          //       return next(err)
-          //     } else {
-          //       res.status(200).send(user)
-          //     }
-          //     res.end()
-          //   })
-          res.status(200).send(book)
+          res.status(200).send(user)
           } 
           })
   })
+  
+  //PUT edit book rating by user id/book id
+  .put('/:userId/:bookId', async (req, res, next) => {
+    const {userId, bookId} = req.params
+    const newRating = req.body.userRating
+    
+    const userRating = parseInt(newRating)
+    const user = await User.findById(userId)  
+      user.books.map((book)=> {
+        if(book._id == bookId){
+          book.userRating = userRating
+        }
+      })
+      user.save((err, user) => {
+        if(err) {
+          res.status(400).send(err)
+          return next(err)
+        } else {
+          res.status(200).send(user)
+          } 
+          })
+    
+    })
+
+  // GET Find user by username, firstname and/or lastname
+  .get('/find-user', async (req, res, next) => {
+    const {username, firstname, lastname} = req.body
+    User.find().where({ username: { $regex: username, $options: "i"}})
+      .where({ firstname: { $regex: firstname, $options: "i"}})
+      .where({ lastname: { $regex: lastname, $options: "i"}})
+      .exec((err, user) => {
+        if(err){
+          res.status(400).send(err)
+          return next(err)
+        } else {
+          res.status(200).send(user)
+        }
+      })
+
+  })
+    // GET user by userId
+    .get('/:userId', async (req, res, next) => {
+      const userId = req.params.userId
+      User.findById(userId)
+      .exec((err, user) => {
+        if(err){
+          res.status(400).send(err)
+          return next(err)
+        } else {
+          res.status(200).send(user)
+        }
+      })
+    })
     
 
 
