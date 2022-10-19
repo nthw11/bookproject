@@ -1,8 +1,6 @@
 import express from 'express'
-// import { use } from 'passport'
 import User from '../models/User.js'
-import Book from '../models/Book.js'
-import crypto from 'crypto'
+import Club from '../models/Club.js'
 const router = express.Router()
 
 router
@@ -63,70 +61,8 @@ router
     })
   })
 
-// POST add new book by userId
-  .post('/:userId/add-book', async (req, res, next) => {
-    const userId = req.params.userId
-    const { 
-      title,
-      subtitle,
-      authors,
-      pageCount,
-      publishedDate,
-      categories,
-      imageLink,
-      publisher,
-      userRating,
-      tags,
-      notes
-      } = req.body
-      const bookToAdd = new Book({})
-      bookToAdd.title = title
-      bookToAdd.subtitle = subtitle
-      bookToAdd.authors = [authors]
-      bookToAdd.pageCount = pageCount
-      bookToAdd.publishedDate = publishedDate
-      bookToAdd.categories = [categories]
-      bookToAdd.imageLink = imageLink
-      bookToAdd.publisher = publisher
-      bookToAdd.userRating = userRating
-      bookToAdd.tags = [tags]
-      bookToAdd.notes = [notes]
-      
-      const user = await User.findById(userId)
-      user.books.push(bookToAdd)
-      user.save((err, user) => {
-        if(err) {
-          res.status(400).send(err)
-          return next(err)
-        } else {
-          res.status(200).send(user)
-          } 
-          })
-  })
-  
-  //PUT edit book rating by user id/book id
-  .put('/:userId/:bookId', async (req, res, next) => {
-    const {userId, bookId} = req.params
-    const newRating = req.body.userRating
-    
-    const userRating = parseInt(newRating)
-    const user = await User.findById(userId)  
-      user.books.map((book)=> {
-        if(book._id == bookId){
-          book.userRating = userRating
-        }
-      })
-      user.save((err, user) => {
-        if(err) {
-          res.status(400).send(err)
-          return next(err)
-        } else {
-          res.status(200).send(user)
-          } 
-          })
-    
-    })
 
+  
   // GET Find user by username, firstname and/or lastname
   .get('/find-user', async (req, res, next) => {
     const {username, firstname, lastname} = req.body
@@ -143,21 +79,97 @@ router
       })
 
   })
-    // GET user by userId
-    .get('/:userId', async (req, res, next) => {
-      const userId = req.params.userId
-      User.findById(userId)
-      .exec((err, user) => {
-        if(err){
-          res.status(400).send(err)
-          return next(err)
-        } else {
-          res.status(200).send(user)
+  // GET user by userId
+  .get('/:userId', async (req, res, next) => {
+    const userId = req.params.userId
+    User.findById(userId)
+    .exec((err, user) => {
+      if(err){
+        res.status(400).send(err)
+        return next(err)
+      } else {
+        res.status(200).send(user)
+      }
+    })
+  })
+
+  //PUT add user to club
+  .put('/:userId/club', async (req, res, next) => {
+    const userId = req.params.userId
+    const clubId = req.body.clubId
+    User.findByIdAndUpdate({_id: userId}, {$push: {clubs: [clubId]}})
+    .exec((err, user) => {
+      if(err){
+        res.status(400).send(err)
+        return next(err)
+      } else {
+        Club.findByIdAndUpdate({_id: clubId}, {$push: {clubMembers: [userId]}})
+        .exec((err, club) => {
+          if(err){
+            res.status(400).send(err)
+            return next(err)
+          } 
+        })
+        res.status(200).send(user)
+      }
+    })
+  })
+
+  // PUT remove user from club
+  .put('/:userId/leaveclub', async (req, res, next) => {
+    const userId = req.params.userId
+    const clubId = req.body.clubId
+    const user = await User.findById({_id: userId})
+      let updatedClubsArr = []
+      user.clubs.map(club => {
+        if(club._id != clubId){
+          updatedClubsArr.push(club)
         }
       })
+      user.clubs = updatedClubsArr
+      await user.save()
+      const club = await Club.findById({_id: clubId})
+      let updatedClubMembersArr = []
+      club.clubMembers.map(member => {
+        if(member._id != userId){
+          updatedClubMembersArr.push(member)
+        }
+      })
+      club.clubMembers = updatedClubMembersArr
+      await club.save()
+      res.status(200).send(user)
+  })
+  //PUT add user to contacts
+  .put('/:userId/contact', async (req, res, next) => {
+    const userId = req.params.userId
+    const contactId = req.body.contactId
+    User.findByIdAndUpdate({_id: userId}, {$push: {contacts: [contactId]}})
+    .exec((err, user) => {
+      if(err){
+        res.status(400).send(err)
+        return next(err)
+      } else {
+        res.status(200).send(user)
+      }
     })
-    
+  })
 
+  // PUT remove user from contacts
+  .put('/:userId/dropcontact', async (req, res, next) => {
+    const userId = req.params.userId
+    const contactId = req.body.contactId
+    const user = await User.findById({_id: userId})
+      let updatedContactsArr = []
+      user.contacts.map(contact => {
+        if(contact._id != contactId){
+          updatedContactsArr.push(contact)
+        }
+      })
+      user.contacts = updatedContactsArr
+      await user.save()
+      res.status(200).send(user)
+  })
 
+  
 
 export default router

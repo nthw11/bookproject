@@ -1,4 +1,4 @@
-import { Schema as _Schema, model } from "mongoose";
+import mongoose, { Schema as _Schema, model } from "mongoose";
 const Schema = _Schema
 
 const CommentSchema = new Schema({
@@ -7,4 +7,4 @@ const CommentSchema = new Schema({
   commentText: {type: String}
 })
 
-module.exports = mongoose.model('Comment', CommentSchema)
+export default mongoose.model('Comment', CommentSchema)
