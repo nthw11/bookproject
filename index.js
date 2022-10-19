@@ -7,6 +7,8 @@ import testRoutes from './src/routes/test.js'
 import userRoutes from './src/routes/user.js'
 import clubRoutes from './src/routes/club.js'
 import boardRoutes from './src/routes/boards.js'
+import bookRoutes from './src/routes/books.js'
+import messageRoutes from './src/routes/messages.js'
 
 const app = express()
 const PORT = 8000
@@ -33,8 +35,10 @@ app.use(bodyParser.json())
 
 app.use("/test", testRoutes)
 app.use("/user", userRoutes)
+app.use("/user/book", bookRoutes)
 app.use("/club", clubRoutes)
 app.use("/board", boardRoutes)
+app.use("/message", messageRoutes)
 
 export default app.listen(PORT, () =>{ 
   console.log(`app is listening on port ${PORT}`)

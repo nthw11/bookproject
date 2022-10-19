@@ -1,5 +1,4 @@
-import { Schema as _Schema, model } from "mongoose";
-const CommentSchema = './Comment.js'
+import mongoose, { Schema as _Schema, model } from "mongoose";
 const Schema = _Schema
 
 const MessageSchema = new Schema({
@@ -7,7 +6,13 @@ const MessageSchema = new Schema({
   messageText: {type: String},
   messageTimestamp: {type: Date},
   messageTags: [{type: String}],
-  messageComments: [CommentSchema]
+  messageComments: [
+    {
+      commentText: {type: String},
+      commentUser: {type: String},
+      commentTimestamp: {type: Date}
+    }
+  ]
 })
 
-module.exports = mongoose.model('Message', MessageSchema)
+export default mongoose.model('Message', MessageSchema)
