@@ -18,6 +18,7 @@ router
     pageCount,
     publishedDate,
     categories,
+    description,
     imageLink,
     publisher,
     userRating,
@@ -32,6 +33,7 @@ router
         pageCount,
         publishedDate,
         categories,
+        description,
         imageLink,
         publisher,
         userRating,
@@ -75,7 +77,7 @@ router
       result.imageLink = newImageLink
     }
     if(newTags != null){
-      result.tags.push(newTags)
+      result.tags = newTags
     }
     if(newNotes != null){
       result.notes.push(newNotes)

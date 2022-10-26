@@ -9,11 +9,9 @@ const BookSchema = new Schema({
   pageCount: {type: Number},
   publishedDate: { type: Date},
   categories: [{type: String}],
-  imageLink: {type: String}
-  ,
-  
-  
-  userRating: {type: Number, min: 0, max: 10},
+  imageLink: {type: String},
+  description: {type: String},
+  userRating: {type: Number, min: 0, max: 5},
   tags: [{type: String},],
   notes:[String]
 
