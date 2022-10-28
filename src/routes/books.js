@@ -61,23 +61,27 @@ router
 
 .put('/:userId/:bookId', async (req, res, next) => {
   const {userId, bookId} = req.params
-  const {newUserRating, newCategories, newImageLink, newTags, newNotes} = req.body
+  const {newUserRating, newImageLink, newTags, newNotes} = req.body
   const numNewUserRating = parseInt(newUserRating)
   const bookToUpdate = Book.findById({_id:bookId}, function(err, result){
+    // if(newCurrentlyReading != null){
+    //   result.currentlyReading = newCurrentlyReading
+    // }
     if(newUserRating != null){
       console.log(result.userRating)
       result.userRating = newUserRating
     }
-    if(newCategories != null){
-      console.log(newCategories)
-      result.categories.push(newCategories)
-      console.log(result.categories)
-    }
+    // if(newFinishedReading != null){
+    //   console.log(newFinishedReading)
+    //   result.finishedReading.push(newFinishedReading)
+    //   console.log(result.finishedReading)
+    // }
     if(newImageLink != null){
       result.imageLink = newImageLink
     }
     if(newTags != null){
       result.tags = newTags
+      console.log(newTags)
     }
     if(newNotes != null){
       result.notes.push(newNotes)
@@ -119,7 +123,7 @@ router
   .get('/:userId/books', async (req, res, next) => {
     const userId = req.params.userId
     User.findById(userId)
-      .populate('books')
+      .populate('bookshelves')
       .exec((err, user) => {
         if(err) {
           res.status(400).send(err)

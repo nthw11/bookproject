@@ -22,7 +22,12 @@ router
       email,
       phone,
       avatarUrl,
-      password
+      password,
+      bookshelves: [
+        {shelfName: 'upNext', shelfContents: []},
+        {shelfName: 'finishedReading', shelfContents: []},
+        {shelfName: 'allBooks', shelfContents: []}
+      ]
     }).save((err, user) => {
       if(err){
         return next(err)
@@ -31,7 +36,6 @@ router
       }
     })
   })
-
 
   // PUT Edit user info
   .put('/:userId', async (req, res, next) => {
@@ -42,6 +46,8 @@ router
       email,
       phone,
       avatarUrl,
+      currentlyReading,
+      finishedReading,
       password
     } = req.body
     const update = {
@@ -50,6 +56,8 @@ router
       email,
       phone,
       avatarUrl,
+      currentlyReading,
+      finishedReading,
       password
     }
     const updatedUser = await User.findByIdAndUpdate({_id: userId}, update, {new: true}, function (err, response) {
@@ -61,8 +69,46 @@ router
     })
   })
 
+  // PUT Edit user book info
+  .put('/:userId/book-update', (req, res, next) => {
+    const userId = req.params.userId
+    const {
+      newCurrentlyReading,
+      newFinishedReading,
+      newUpNext
+    } = req.body
+    
+    User.findById({_id: userId}, function (err, result) {
+      if(newCurrentlyReading != null){
+        result.currentlyReading = newCurrentlyReading
+      } 
+      if(newFinishedReading != null){
+        result.finishedReading.push(newFinishedReading)
+      }
+      if(newUpNext != null){
+        const newArray = []
+        newArray.push(newUpNext)
+        result.upNext.filter(upNextBook => {
+          if(upNextBook != newUpNext){
+            newArray.push(upNextBook)
+          }
+        })
+        // result.upNext.push(newUpNext)
+        result.upNext = newArray
+      }
+      result.save((err, user) => {
+        if(err)  {
+          return next(err)
+        } else {
+          // console.log(`updated`)
+          res.status(200)
+          .send(user)
+        }
+      })
 
-  
+    })
+  })
+
   // GET Find user by username, firstname and/or lastname
   .get('/find-user', async (req, res, next) => {
     const {username, firstname, lastname} = req.body

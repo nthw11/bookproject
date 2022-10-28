@@ -8,7 +8,6 @@ const BookSchema = new Schema({
   authors: [AuthorSchema],
   pageCount: {type: Number},
   publishedDate: { type: Date},
-  categories: [{type: String}],
   imageLink: {type: String},
   description: {type: String},
   userRating: {type: Number, min: 0, max: 5},
