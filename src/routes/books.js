@@ -45,7 +45,7 @@ router
         } else {
           User.updateOne( 
             {_id: userId},
-            { $push: { books: [book._id]}},
+            { $push: { allBooks: [book._id]}},
             function(err, user){
               if(err) {
                 res.status(400).send(err)
@@ -101,7 +101,7 @@ router
     const {userId, bookId} = req.params
     const user = await User.findById({_id: userId})
       let updatedBooksArr = []
-      user.books.map(book => {
+      user.allBooks.map(book => {
         if(book._id != bookId){
           updatedBooksArr.push(book)
         }
@@ -123,7 +123,8 @@ router
   .get('/:userId/books', async (req, res, next) => {
     const userId = req.params.userId
     User.findById(userId)
-      .populate('bookshelves')
+    .populate({path: 'allBooks'})
+    .populate({path: 'currentlyReading'})
       .exec((err, user) => {
         if(err) {
           res.status(400).send(err)

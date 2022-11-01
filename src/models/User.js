@@ -12,10 +12,10 @@ const UserSchema = new Schema({
   contacts: [{type: Schema.Types.ObjectId, ref: 'User'}],
   blockedContacts: [{type: Schema.Types.ObjectId, ref: 'User'}],
   clubs: [{type: Schema.Types.ObjectId, ref: 'Club'}],
-  // books: [{type: Schema.Types.ObjectId, ref: 'Book'}],
+  allBooks: [{type: Schema.Types.ObjectId, ref: 'Book'}],
   currentlyReading: {type: Schema.Types.ObjectId, ref: 'Book'},
-  // finishedReading: [{type: Schema.Types.ObjectId, ref: 'Book'}],
-  // upNext: [{type: Schema.Types.ObjectId, ref: 'Book'}],
+  finishedReading: [{type: Schema.Types.ObjectId, ref: 'Book'}],
+  upNext: [{type: Schema.Types.ObjectId, ref: 'Book'}],
   bookshelves: [{
     shelfName: {type: String, required: true},
     shelfContents: [{type: Schema.Types.ObjectId, ref: 'Book'}]

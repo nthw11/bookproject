@@ -23,11 +23,10 @@ router
       phone,
       avatarUrl,
       password,
-      bookshelves: [
-        {shelfName: 'upNext', shelfContents: []},
-        {shelfName: 'finishedReading', shelfContents: []},
-        {shelfName: 'allBooks', shelfContents: []}
-      ]
+      bookshelves: [],
+      allBooks: [],
+      // currentlyReading: {},
+      // finishedReading: [],
     }).save((err, user) => {
       if(err){
         return next(err)
@@ -79,9 +78,12 @@ router
     } = req.body
     
     User.findById({_id: userId}, function (err, result) {
+      console.log(result)
       if(newCurrentlyReading != null){
         result.currentlyReading = newCurrentlyReading
-      } 
+      } else if (newCurrentlyReading == 'next') {
+        result.currentlyReading = ''
+      }
       if(newFinishedReading != null){
         result.finishedReading.push(newFinishedReading)
       }
@@ -90,7 +92,7 @@ router
         newArray.push(newUpNext)
         result.upNext.filter(upNextBook => {
           if(upNextBook != newUpNext){
-            newArray.push(upNextBook)
+            newArray.unshift(upNextBook)
           }
         })
         // result.upNext.push(newUpNext)
@@ -129,6 +131,9 @@ router
   .get('/:userId', async (req, res, next) => {
     const userId = req.params.userId
     User.findById(userId)
+    .populate({path: 'allBooks'})
+    .populate({path: 'currentlyReading'})
+    .populate({path: 'upNext'})
     .exec((err, user) => {
       if(err){
         res.status(400).send(err)
