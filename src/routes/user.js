@@ -74,11 +74,12 @@ router
     const {
       newCurrentlyReading,
       newFinishedReading,
-      newUpNext
+      newUpNext,
+      newBookshelf
     } = req.body
-    
+    console.log(newBookshelf)
     User.findById({_id: userId}, function (err, result) {
-      console.log(result)
+      // console.log(result)
       if(newCurrentlyReading != null){
         result.currentlyReading = newCurrentlyReading
       } else if (newCurrentlyReading == 'next') {
@@ -98,6 +99,18 @@ router
         // result.upNext.push(newUpNext)
         result.upNext = newArray
       }
+      if(newBookshelf != null){
+        const newArray = []
+        const newShelf = {shelfName: newBookshelf, shelfContents: []}
+        newArray.push(newBookshelf)
+        result.bookshelves.filter(shelf => {
+          if(shelf.shelfName != newBookshelf){
+            newArray.push(newShelf)
+          }
+        })
+        // result.upNext.push(newUpNext)
+        result.bookshelves = newArray
+      }
       result.save((err, user) => {
         if(err)  {
           return next(err)
@@ -107,9 +120,46 @@ router
           .send(user)
         }
       })
-
     })
   })
+
+  // PUT add or update books to bookshelves
+  .put('/:userId/:bookshelfId/bookshelf-update', (req, res, next) => {
+    const {userId, bookshelfId} = req.params
+    const { bookId } = req.body
+
+    //==============
+    User.findById({_id: userId}, function (err, result) {
+      console.log(result)
+      const bookshelf = result.bookshelves.filter(shelf => {
+        if(shelf._id == bookshelfId){
+          return shelf
+        }
+      })
+      const updatedShelf = []
+      if(!bookshelf.includes(bookId)){
+        bookshelf.push(bookId)
+      } else {
+        bookshelf.shelfContents.filter(book => {
+          if(book._id != bookId){
+            updatedShelf.push(book)
+          }
+        })
+      }
+      result.save((err, user) => {
+        if(err)  {
+          return next(err)
+        } else {
+          // console.log(`updated`)
+          res.status(200)
+          .send(user)
+        }
+      })
+    })
+  })
+
+
+  // })
 
   // GET Find user by username, firstname and/or lastname
   .get('/find-user', async (req, res, next) => {
