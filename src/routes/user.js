@@ -1,6 +1,10 @@
 import express from 'express'
 import User from '../models/User.js'
 import Club from '../models/Club.js'
+import passport from 'passport'
+// import passportService from '../authentication/passport.js'
+const requireAuth = passport.authenticate('jwt', {session: false})
+
 const router = express.Router()
 
 router
