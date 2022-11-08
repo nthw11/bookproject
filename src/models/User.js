@@ -21,7 +21,8 @@ const UserSchema = new Schema({
     shelfContents: [{type: Schema.Types.ObjectId, ref: 'Book'}]
   }],
   tags: [{ type: String}],
-  password: {type: String}
+  hash: {type: String},
+  salt: {type: String}
 })
 
 export default mongoose.model('User', UserSchema)

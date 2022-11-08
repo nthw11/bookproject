@@ -9,36 +9,36 @@ const router = express.Router()
 
 router
 // POST add new user
-  .post('/', async (req, res, next) => {
-    const {
-      username,
-      firstname,
-      lastname,
-      email,
-      phone,
-      avatarUrl,
-      password
-    } = req.body
-    const newUser = new User({
-      username,
-      firstname,
-      lastname,
-      email,
-      phone,
-      avatarUrl,
-      password,
-      bookshelves: [],
-      allBooks: [],
-      // currentlyReading: {},
-      // finishedReading: [],
-    }).save((err, user) => {
-      if(err){
-        return next(err)
-      } else {
-        res.status(200).send(user)
-      }
-    })
-  })
+  // .post('/', async (req, res, next) => {
+  //   const {
+  //     username,
+  //     firstname,
+  //     lastname,
+  //     email,
+  //     phone,
+  //     avatarUrl,
+  
+  //   } = req.body
+  //   const newUser = new User({
+  //     username,
+  //     firstname,
+  //     lastname,
+  //     email,
+  //     phone,
+  //     avatarUrl,
+  
+  //     bookshelves: [],
+  //     allBooks: [],
+  //     // currentlyReading: {},
+  //     // finishedReading: [],
+  //   }).save((err, user) => {
+  //     if(err){
+  //       return next(err)
+  //     } else {
+  //       res.status(200).send(user)
+  //     }
+  //   })
+  // })
 
   // PUT Edit user info
   .put('/:userId', async (req, res, next) => {
@@ -50,8 +50,8 @@ router
       phone,
       avatarUrl,
       currentlyReading,
-      finishedReading,
-      password
+      finishedReading
+      
     } = req.body
     const update = {
       firstname,
@@ -61,7 +61,7 @@ router
       avatarUrl,
       currentlyReading,
       finishedReading,
-      password
+      
     }
     const updatedUser = await User.findByIdAndUpdate({_id: userId}, update, {new: true}, function (err, response) {
       if(err){

@@ -30,6 +30,13 @@ const jwtOptions = {
 
 const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
   User.findById(payload.sub)
+  .then((user) => {
+    if(user) { 
+      return done(null, user)
+    } else {
+      return done(null, false)
+    }
+  })
   .populate({path: 'allBooks'})
   .populate({path: 'currentlyReading'})
   .populate({path: 'upNext'})

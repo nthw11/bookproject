@@ -26,13 +26,12 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use(express.json())
 app.use(
-  bodyParser.urlencoded({
-    extended: false,
+  express.urlencoded({
+    extended: true,
   })
 )
-
-app.use(bodyParser.json())
 
 app.use("/test", testRoutes)
 app.use("/user", userRoutes)
