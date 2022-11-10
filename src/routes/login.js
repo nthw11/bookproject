@@ -14,7 +14,7 @@ const requireAuth = passport.authenticate('jwt', {
 });
 
 router
-
+//POST login existing user
 .post('/', function(req,res, next){
   const {username, password} = req.body
   console.log(username)
@@ -37,6 +37,7 @@ router
   })
 })
 
+//POST Add new user
 .post('/register', function(req, res, next){
   const {
     username,

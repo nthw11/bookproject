@@ -86,7 +86,8 @@ router
       // console.log(result)
       if(newCurrentlyReading != null){
         result.currentlyReading = newCurrentlyReading
-      } else if (newCurrentlyReading == 'next') {
+      } 
+      if (newCurrentlyReading == 'next') {
         result.currentlyReading = ''
       }
       if(newFinishedReading != null){
