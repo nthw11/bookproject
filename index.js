@@ -9,6 +9,7 @@ import clubRoutes from './src/routes/club.js'
 import boardRoutes from './src/routes/boards.js'
 import bookRoutes from './src/routes/books.js'
 import messageRoutes from './src/routes/messages.js'
+import loginRoutes from './src/routes/login.js'
 
 const app = express()
 const PORT = 8000
@@ -25,16 +26,16 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use(express.json())
 app.use(
-  bodyParser.urlencoded({
-    extended: false,
+  express.urlencoded({
+    extended: true,
   })
 )
 
-app.use(bodyParser.json())
-
 app.use("/test", testRoutes)
 app.use("/user", userRoutes)
+app.use("/login", loginRoutes)
 app.use("/user/book", bookRoutes)
 app.use("/club", clubRoutes)
 app.use("/board", boardRoutes)
