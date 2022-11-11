@@ -98,7 +98,7 @@ router
         newArray.push(newUpNext)
         result.upNext.filter(upNextBook => {
           if(upNextBook != newUpNext){
-            newArray.unshift(upNextBook)
+            newArray.push(upNextBook)
           }
         })
         // result.upNext.push(newUpNext)
@@ -186,9 +186,6 @@ router
   .get('/:userId', async (req, res, next) => {
     const userId = req.params.userId
     User.findById(userId)
-    .populate({path: 'allBooks'})
-    .populate({path: 'currentlyReading'})
-    .populate({path: 'upNext'})
     .exec((err, user) => {
       if(err){
         res.status(400).send(err)
