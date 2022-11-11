@@ -1,0 +1,93 @@
+[debug] [2022-11-11T18:58:46.005Z] ----------------------------------------------------------------------
+[debug] [2022-11-11T18:58:46.006Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\natha\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2022-11-11T18:58:46.007Z] CLI Version:   11.16.0
+[debug] [2022-11-11T18:58:46.007Z] Platform:      win32
+[debug] [2022-11-11T18:58:46.007Z] Node Version:  v18.12.1
+[debug] [2022-11-11T18:58:46.008Z] Time:          Fri Nov 11 2022 13:58:46 GMT-0500 (Eastern Standard Time)
+[debug] [2022-11-11T18:58:46.008Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-11-11T18:58:46.055Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"source"}
+[debug] [2022-11-11T18:58:46.056Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"source"}
+[debug] [2022-11-11T18:58:46.056Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"source"}
+[debug] [2022-11-11T18:58:46.056Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"source"}
+[debug] [2022-11-11T18:58:46.056Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"source"}
+[debug] [2022-11-11T18:58:46.056Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"index"}
+[debug] [2022-11-11T18:58:46.056Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"index"}
+[debug] [2022-11-11T18:58:46.056Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"index"}
+[debug] [2022-11-11T18:58:46.056Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"index"}
+[debug] [2022-11-11T18:58:46.056Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"index"}
+[debug] [2022-11-11T18:58:46.057Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"source"}
+[debug] [2022-11-11T18:58:46.057Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"source"}
+[debug] [2022-11-11T18:58:46.057Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"source"}
+[debug] [2022-11-11T18:58:46.057Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"source"}
+[debug] [2022-11-11T18:58:46.057Z] Object ".hosting.rewrites[0]" in "firebase.json" has unknown property: {"additionalProperty":"source"}
+[debug] [2022-11-11T18:58:46.057Z] Field ".hosting.rewrites[0]" in "firebase.json" is possibly invalid: should match some schema in anyOf
+[debug] [2022-11-11T18:58:46.057Z] Field ".hosting" in "firebase.json" is possibly invalid: should be array
+[debug] [2022-11-11T18:58:46.057Z] Field ".hosting" in "firebase.json" is possibly invalid: should match some schema in anyOf
+[debug] [2022-11-11T18:58:46.063Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-11-11T18:58:46.063Z] > authorizing via signed-in user (nthw.dev@gmail.com)
+[debug] [2022-11-11T18:58:46.063Z] [iam] checking project bookproject-6cd0e for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2022-11-11T18:58:46.066Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/bookproject-6cd0e:testIamPermissions [none]
+[debug] [2022-11-11T18:58:46.066Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/bookproject-6cd0e:testIamPermissions x-goog-quota-user=projects/bookproject-6cd0e
+[debug] [2022-11-11T18:58:46.067Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/bookproject-6cd0e:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2022-11-11T18:58:46.332Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/bookproject-6cd0e:testIamPermissions 200
+[debug] [2022-11-11T18:58:46.332Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/bookproject-6cd0e:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2022-11-11T18:58:46.333Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/bookproject-6cd0e [none]
+[debug] [2022-11-11T18:58:46.621Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/bookproject-6cd0e 200
+[debug] [2022-11-11T18:58:46.621Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/bookproject-6cd0e {"projectId":"bookproject-6cd0e","projectNumber":"410954682115","displayName":"bookproject","name":"projects/bookproject-6cd0e","resources":{"hostingSite":"bookproject-6cd0e"},"state":"ACTIVE","etag":"1_8621bd0e-3fff-441d-8d5c-51fae2cd652e"}
+[info] 
+[info] === Deploying to 'bookproject-6cd0e'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2022-11-11T18:58:46.627Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/bookproject-6cd0e/versions [none]
+[debug] [2022-11-11T18:58:46.628Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/bookproject-6cd0e/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2022-11-11T18:58:47.191Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/bookproject-6cd0e/versions 200
+[debug] [2022-11-11T18:58:47.191Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/bookproject-6cd0e/versions {"name":"projects/410954682115/sites/bookproject-6cd0e/versions/ba67493dbb98fcf4","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[bookproject-6cd0e]: beginning deploy... 
+[info] i  hosting[bookproject-6cd0e]: found 2 files in public 
+[debug] [2022-11-11T18:58:47.198Z] [hosting] uploading with 200 concurrency
+[debug] [2022-11-11T18:58:47.203Z] [hosting] hash cache [cHVibGlj] stored for 2 files
+[debug] [2022-11-11T18:58:47.203Z] [hosting][hash queue][FINAL] {"max":1,"min":0,"avg":0,"active":0,"complete":2,"success":2,"errored":0,"retried":0,"total":2,"elapsed":2}
+[debug] [2022-11-11T18:58:47.203Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/410954682115/sites/bookproject-6cd0e/versions/ba67493dbb98fcf4:populateFiles [none]
+[debug] [2022-11-11T18:58:47.203Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/410954682115/sites/bookproject-6cd0e/versions/ba67493dbb98fcf4:populateFiles {"files":{"/404.html":"daa499dd96d8229e73235345702ba32f0793f0c8e5c0d30e40e37a5872be57aa","/index.html":"c03ca608c87aaec0bab0aedd0e3f606cfc7efc11056378394c3d7170ded2ff00"}}
+[debug] [2022-11-11T18:58:47.595Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/410954682115/sites/bookproject-6cd0e/versions/ba67493dbb98fcf4:populateFiles 200
+[debug] [2022-11-11T18:58:47.595Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/410954682115/sites/bookproject-6cd0e/versions/ba67493dbb98fcf4:populateFiles {"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/bookproject-6cd0e/versions/ba67493dbb98fcf4/files"}
+[debug] [2022-11-11T18:58:47.595Z] [hosting][populate queue][FINAL] {"max":393,"min":393,"avg":393,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":393}
+[debug] [2022-11-11T18:58:47.595Z] [hosting] uploads queued: 0
+[debug] [2022-11-11T18:58:47.595Z] [hosting][upload queue][FINAL] {"max":0,"min":9999999999,"avg":0,"active":0,"complete":0,"success":0,"errored":0,"retried":0,"total":0,"elapsed":1668193127595}
+[info] +  hosting[bookproject-6cd0e]: file upload complete 
+[debug] [2022-11-11T18:58:47.597Z] [hosting] deploy completed after 405ms
+[debug] [2022-11-11T18:58:47.599Z] [
+  {
+    "config": {
+      "public": "public",
+      "rewrites": [
+        {
+          "source": "**",
+          "index": "app"
+        }
+      ],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "site": "bookproject-6cd0e"
+    },
+    "version": "projects/410954682115/sites/bookproject-6cd0e/versions/ba67493dbb98fcf4"
+  }
+]
+[info] i  hosting[bookproject-6cd0e]: finalizing version... 
+[debug] [2022-11-11T18:58:47.679Z] Error: Never has a value ([object Object]). This should be impossible
+    at assertExhaustive (C:\Users\natha\AppData\Roaming\npm\node_modules\firebase-tools\lib\functional.js:56:11)
+    at C:\Users\natha\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\hosting\convertConfig.js:145:43
+    at Array.map (<anonymous>)
+    at convertConfig (C:\Users\natha\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\hosting\convertConfig.js:83:93)
+    at C:\Users\natha\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\hosting\release.js:21:61
+    at Array.map (<anonymous>)
+    at release (C:\Users\natha\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\hosting\release.js:14:47)
+    at chain (C:\Users\natha\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\index.js:35:15)
+    at deploy (C:\Users\natha\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\index.js:81:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[error] 
+[error] Error: An unexpected error has occurred.

@@ -1,3 +1,4 @@
+import { initializeApp } from 'firebase/app'
 import express, { response } from 'express'
 import bodyParser from 'body-parser'
 import {} from 'dotenv/config'
@@ -15,6 +16,8 @@ const app = express()
 const PORT = 8000
 
 connectDB()
+
+const firebaseApp = initializeApp()
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*")
