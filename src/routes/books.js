@@ -45,7 +45,7 @@ router
         } else {
           User.updateOne( 
             {_id: userId},
-            { $push: { books: [book._id]}},
+            { $push: { allBooks: [book._id]}},
             function(err, user){
               if(err) {
                 res.status(400).send(err)
@@ -64,9 +64,9 @@ router
   const {newUserRating, newImageLink, newTags, newNotes} = req.body
   const numNewUserRating = parseInt(newUserRating)
   const bookToUpdate = Book.findById({_id:bookId}, function(err, result){
-    // if(newCurrentlyReading != null){
-    //   result.currentlyReading = newCurrentlyReading
-    // }
+    if(newCurrentlyReading != null){
+      result.currentlyReading = newCurrentlyReading
+    }
     if(newUserRating != null){
       console.log(result.userRating)
       result.userRating = newUserRating

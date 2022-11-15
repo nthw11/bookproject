@@ -3,42 +3,14 @@ import User from '../models/User.js'
 import Club from '../models/Club.js'
 import passport from 'passport'
 // import passportService from '../authentication/passport.js'
+import { verifyToken } from '../authentication/verifyToken.js'
+
 const requireAuth = passport.authenticate('jwt', {session: false})
 
 const router = express.Router()
 
 router
-// POST add new user
-  // .post('/', async (req, res, next) => {
-  //   const {
-  //     username,
-  //     firstname,
-  //     lastname,
-  //     email,
-  //     phone,
-  //     avatarUrl,
-  
-  //   } = req.body
-  //   const newUser = new User({
-  //     username,
-  //     firstname,
-  //     lastname,
-  //     email,
-  //     phone,
-  //     avatarUrl,
-  
-  //     bookshelves: [],
-  //     allBooks: [],
-  //     // currentlyReading: {},
-  //     // finishedReading: [],
-  //   }).save((err, user) => {
-  //     if(err){
-  //       return next(err)
-  //     } else {
-  //       res.status(200).send(user)
-  //     }
-  //   })
-  // })
+
 
   // PUT Edit user info
   .put('/:userId', async (req, res, next) => {
@@ -81,15 +53,15 @@ router
       newUpNext,
       newBookshelf
     } = req.body
-    console.log(newBookshelf)
+    console.log(newCurrentlyReading)
     User.findById({_id: userId}, function (err, result) {
-      // console.log(result)
+      console.log(result)
       if(newCurrentlyReading != null){
         result.currentlyReading = newCurrentlyReading
       } 
-      if (newCurrentlyReading == 'next') {
-        result.currentlyReading = ''
-      }
+      // if (newCurrentlyReading == 'next') {
+      //   result.currentlyReading = ''
+      // }
       if(newFinishedReading != null){
         result.finishedReading.push(newFinishedReading)
       }
@@ -167,7 +139,7 @@ router
   // })
 
   // GET Find user by username, firstname and/or lastname
-  .get('/find-user', async (req, res, next) => {
+  .get('/find-user', verifyToken, async (req, res, next) => {
     const {username, firstname, lastname} = req.body
     User.find().where({ username: { $regex: username, $options: "i"}})
       .where({ firstname: { $regex: firstname, $options: "i"}})
@@ -186,6 +158,11 @@ router
   .get('/:userId', async (req, res, next) => {
     const userId = req.params.userId
     User.findById(userId)
+    .populate('currentlyReading')
+    .populate('contacts')
+    .populate('clubs')
+    .populate('allBooks')
+    .populate('upNext')
     .exec((err, user) => {
       if(err){
         res.status(400).send(err)

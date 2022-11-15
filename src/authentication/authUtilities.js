@@ -3,13 +3,14 @@ import jsonwebtoken from 'jsonwebtoken'
 import fs from 'fs'
 import path from 'path'
 import {fileURLToPath} from 'url'
-// import * as dotenv from 'dotenv'
-// dotenv.config()
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const pathToKey = path.join(__dirname, '../..', 'id_rsa_priv.pem')
 
+// const PRIV_KEY = process.env.PRIVATE_PEM_KEY
 const PRIV_KEY = fs.readFileSync(pathToKey, 'utf8')
 
 const validPassword = (password, hash, salt) => {
