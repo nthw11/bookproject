@@ -20,7 +20,6 @@ router
       res.status(401).send("could not find user")
     }
     validatePassword(password, user.password)
-    // console.log(user)
     if(!validatePassword){
       res.status(401).send("password is incorrect")
     } else {
@@ -39,9 +38,9 @@ router
         bookshelves: user.bookshelves
      }
       const token = issueJWT(user)
-      res.header('auth-token', token)
+      res.json({user: userMinusPassword, token: token})
       .status(200)
-      .send(userMinusPassword)
+      
     }
     
 
@@ -79,7 +78,10 @@ router
       if(error){
         res.status(400).send(error)
       } else {
-        res.status(200).send(user)
+        const token = issueJWT(user)
+      
+      res.json({user: userMinusPassword, token: token})
+      .status(200)
       }
     
     })

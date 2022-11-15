@@ -7,7 +7,6 @@ dotenv.config()
 const secret = process.env.AUTH_SECRET
 
 const genPassword = async (password) => {
-  console.log(password)
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(password, salt)
   return hashedPassword
@@ -21,18 +20,6 @@ const validatePassword = async (passwordString, passwordHash ) => {
 
 const issueJWT = (user) => {
   const _id = user._id
-  // const expiresIn = '7d'
-  // const payload = {
-  //   sub: _id,
-  //   iat: Date.now()
-  // }
-  // const signedToken = jsonwebtoken.sign(payload, secret, {expiresIn: expiresIn})
-
-  // return{
-  //   token: signedToken,
-  //   expires: expiresIn,
-  //   user: user
-  // }
   const signedToken = jsonwebtoken.sign({_id}, secret)
   return signedToken
 }

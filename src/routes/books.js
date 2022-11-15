@@ -5,11 +5,11 @@ import Book from '../models/Book.js'
 import crypto from 'crypto'
 import e from 'express'
 const router = express.Router()
-
+import { verifyToken } from '../authentication/verifyToken.js'
 
 // POST add new book by userId
 router
-.post('/:userId/add-book', async (req, res, next) => {
+.post('/:userId/add-book', verifyToken, async (req, res, next) => {
   const userId = req.params.userId
   const { 
     title,
@@ -59,7 +59,7 @@ router
 
 //PUT edit book rating by user id/book id
 
-.put('/:userId/:bookId', async (req, res, next) => {
+.put('/:userId/:bookId', verifyToken, async (req, res, next) => {
   const {userId, bookId} = req.params
   const {newUserRating, newImageLink, newTags, newNotes} = req.body
   const numNewUserRating = parseInt(newUserRating)
@@ -68,7 +68,6 @@ router
       result.currentlyReading = newCurrentlyReading
     }
     if(newUserRating != null){
-      console.log(result.userRating)
       result.userRating = newUserRating
     }
     // if(newFinishedReading != null){
@@ -81,7 +80,6 @@ router
     }
     if(newTags != null){
       result.tags = newTags
-      console.log(newTags)
     }
     if(newNotes != null){
       result.notes.push(newNotes)
@@ -97,17 +95,17 @@ router
   })
   })
 
-  .delete('/:userId/:bookId', async (req, res, next) => {
+  .delete('/:userId/:bookId', verifyToken, async (req, res, next) => {
     const {userId, bookId} = req.params
     const user = await User.findById({_id: userId})
       let updatedBooksArr = []
-      user.books.map(book => {
+      user.allBooks.map(book => {
         if(book._id != bookId){
           updatedBooksArr.push(book)
         }
         
       })
-    user.books = updatedBooksArr
+    user.allBooks = updatedBooksArr
     await user.save()
     Book.findByIdAndDelete(bookId).exec((err) => {
       if(err){
@@ -120,7 +118,7 @@ router
   })
 
   //GET all books by userId
-  .get('/:userId/books', async (req, res, next) => {
+  .get('/:userId/books', verifyToken, async (req, res, next) => {
     const userId = req.params.userId
     User.findById(userId)
       .populate('bookshelves')

@@ -1,9 +1,8 @@
 import jsonwebtoken from 'jsonwebtoken'
 
 const verifyToken = (req, res, next) => {
-  const token = req.header('auth-token')
-  // const testDate = new Date.now()
-  console.log(token )
+  const token = req.header('token')
+
   if(!token) return res.status(401).send('Access Denied')
 
   try{

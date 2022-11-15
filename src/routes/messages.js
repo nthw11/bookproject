@@ -1,11 +1,11 @@
 import express from 'express'
 import Message from '../models/Message.js'
+import { verifyToken } from '../authentication/verifyToken.js'
 const router = express.Router()
-
 router
 
 //GET comments by messageId
-.get('/:messageId', async (req, res, next) => {
+.get('/:messageId', verifyToken, async (req, res, next) => {
   const messageId = req.params.messageId
   Message.findById(messageId)
   .populate({ path: 'messageComments'})
@@ -19,7 +19,7 @@ router
 })
 
 //POST add comment by messageId
-.post('/:messageId', async (req, res, next) => {
+.post('/:messageId', verifyToken, async (req, res, next) => {
   const messageId = req.params.messageId
   const {userId, text} = req.body
   if(text != null){
@@ -74,7 +74,7 @@ router
 // })
 
 //DELETE comment by messageId
-.delete('/:messageId/:commentId', async (req, res, next) => {
+.delete('/:messageId/:commentId', verifyToken, async (req, res, next) => {
   const {messageId, commentId} = req.params
   const messageToUpdate = await Message.findById({_id: messageId})
     let updatedMessageCommentsArray = []
