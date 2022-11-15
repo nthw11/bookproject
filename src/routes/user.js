@@ -2,46 +2,18 @@ import express from 'express'
 import User from '../models/User.js'
 import Club from '../models/Club.js'
 import passport from 'passport'
-// import passportService from '../authentication/passport.js'
+
+import { verifyToken } from '../authentication/verifyToken.js'
+
 const requireAuth = passport.authenticate('jwt', {session: false})
 
 const router = express.Router()
 
 router
-// POST add new user
-  // .post('/', async (req, res, next) => {
-  //   const {
-  //     username,
-  //     firstname,
-  //     lastname,
-  //     email,
-  //     phone,
-  //     avatarUrl,
-  
-  //   } = req.body
-  //   const newUser = new User({
-  //     username,
-  //     firstname,
-  //     lastname,
-  //     email,
-  //     phone,
-  //     avatarUrl,
-  
-  //     bookshelves: [],
-  //     allBooks: [],
-  //     // currentlyReading: {},
-  //     // finishedReading: [],
-  //   }).save((err, user) => {
-  //     if(err){
-  //       return next(err)
-  //     } else {
-  //       res.status(200).send(user)
-  //     }
-  //   })
-  // })
+
 
   // PUT Edit user info
-  .put('/:userId', async (req, res, next) => {
+  .put('/:userId', verifyToken, async (req, res, next) => {
     const userId = req.params.userId
     const {
       firstname,
@@ -73,7 +45,7 @@ router
   })
 
   // PUT Edit user book info
-  .put('/:userId/book-update', (req, res, next) => {
+  .put('/:userId/book-update', verifyToken, (req, res, next) => {
     const userId = req.params.userId
     const {
       newCurrentlyReading,
@@ -81,15 +53,13 @@ router
       newUpNext,
       newBookshelf
     } = req.body
-    console.log(newBookshelf)
     User.findById({_id: userId}, function (err, result) {
-      // console.log(result)
       if(newCurrentlyReading != null){
         result.currentlyReading = newCurrentlyReading
       } 
-      if (newCurrentlyReading == 'next') {
-        result.currentlyReading = ''
-      }
+      // if (newCurrentlyReading == 'next') {
+      //   result.currentlyReading = ''
+      // }
       if(newFinishedReading != null){
         result.finishedReading.push(newFinishedReading)
       }
@@ -129,13 +99,12 @@ router
   })
 
   // PUT add or update books to bookshelves
-  .put('/:userId/:bookshelfId/bookshelf-update', (req, res, next) => {
+  .put('/:userId/:bookshelfId/bookshelf-update', verifyToken, (req, res, next) => {
     const {userId, bookshelfId} = req.params
     const { bookId } = req.body
 
     //==============
     User.findById({_id: userId}, function (err, result) {
-      console.log(result)
       const bookshelf = result.bookshelves.filter(shelf => {
         if(shelf._id == bookshelfId){
           return shelf
@@ -155,7 +124,6 @@ router
         if(err)  {
           return next(err)
         } else {
-          // console.log(`updated`)
           res.status(200)
           .send(user)
         }
@@ -167,7 +135,7 @@ router
   // })
 
   // GET Find user by username, firstname and/or lastname
-  .get('/find-user', async (req, res, next) => {
+  .get('/find-user', verifyToken, async (req, res, next) => {
     const {username, firstname, lastname} = req.body
     User.find().where({ username: { $regex: username, $options: "i"}})
       .where({ firstname: { $regex: firstname, $options: "i"}})
@@ -183,9 +151,14 @@ router
 
   })
   // GET user by userId
-  .get('/:userId', async (req, res, next) => {
+  .get('/:userId', verifyToken, async (req, res, next) => {
     const userId = req.params.userId
     User.findById(userId)
+    .populate('currentlyReading')
+    .populate('contacts')
+    .populate('clubs')
+    .populate('allBooks')
+    .populate('upNext')
     .exec((err, user) => {
       if(err){
         res.status(400).send(err)
@@ -197,7 +170,7 @@ router
   })
 
   //PUT add user to club
-  .put('/:userId/club', async (req, res, next) => {
+  .put('/:userId/club', verifyToken, async (req, res, next) => {
     const userId = req.params.userId
     const clubId = req.body.clubId
     User.findByIdAndUpdate({_id: userId}, {$push: {clubs: [clubId]}})
@@ -219,7 +192,7 @@ router
   })
 
   // PUT remove user from club
-  .put('/:userId/leaveclub', async (req, res, next) => {
+  .put('/:userId/leaveclub', verifyToken, async (req, res, next) => {
     const userId = req.params.userId
     const clubId = req.body.clubId
     const user = await User.findById({_id: userId})
@@ -243,7 +216,7 @@ router
       res.status(200).send(user)
   })
   //PUT add user to contacts
-  .put('/:userId/contact', async (req, res, next) => {
+  .put('/:userId/contact', verifyToken, async (req, res, next) => {
     const userId = req.params.userId
     const contactId = req.body.contactId
     User.findByIdAndUpdate({_id: userId}, {$push: {contacts: [contactId]}})
@@ -258,7 +231,7 @@ router
   })
 
   // PUT remove user from contacts
-  .put('/:userId/dropcontact', async (req, res, next) => {
+  .put('/:userId/dropcontact', verifyToken, async (req, res, next) => {
     const userId = req.params.userId
     const contactId = req.body.contactId
     const user = await User.findById({_id: userId})

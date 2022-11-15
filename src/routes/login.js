@@ -1,85 +1,91 @@
 import express from 'express'
-import passport from 'passport'
+// import passport from 'passport'
+
 import User from '../models/User.js'
-// import { signin, currentUser } from '../authentication/auth.js'
-import { validPassword, genPassword, issueJWT } from '../authentication/authUtilities.js'
+import { loginValidation, newUserValidation } from '../util/loginValidation.js'
+import { genPassword, validatePassword, issueJWT } from '../authentication/auth.js'
 
 const router = express.Router()
 
-const requireSignin = passport.authenticate('jwt', {session: false})
-
-const requireAuth = passport.authenticate('jwt', {
-  session: false,
-  failureRedirect: '/not-authorized'
-});
-
 router
-//POST login existing user
-.post('/', function(req,res, next){
-  const {username, password} = req.body
-  console.log(username)
-  User.findOne({ username })
-  .then((user)=> {
+  //POST Login existing user
+  .post('/', async (req, res, next) => {
+    const {error} = loginValidation(req.body)
+    if (error ) return res.status(400).send(error.details[0].message)
+    const {username, password} = req.body
+
+    await User.findOne({ username })
+    .then((user)=> {
     if(!user){
       res.status(401).send("could not find user")
     }
-    const isValid = validPassword(password, user.hash, user.salt)
-
-    if(isValid) {
-      const tokenObj = issueJWT(user)
-      res.status(200).send(tokenObj)
+    validatePassword(password, user.password)
+    if(!validatePassword){
+      res.status(401).send("password is incorrect")
     } else {
-      res.status(401).send('You entered the wrong password')
+      const userMinusPassword = {
+        _id: user._id,
+        username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        phone: user.phone,
+        email: user.email,
+        contacts: user.contacts,
+        blockedContacts: user.blockedContacts,
+        clubs: user.clubs,
+        tags: user.tags,
+        allBooks: user.allBooks,
+        bookshelves: user.bookshelves
+     }
+      const token = issueJWT(user)
+      res.json({user: userMinusPassword, token: token})
+      .status(200)
+      
     }
-  })
-  .catch((err) => {
-    next(err)
+    
+
   })
 })
 
-//POST Add new user
-.post('/register', function(req, res, next){
-  const {
-    username,
-    firstname,
-    lastname,
-    email,
-    phone,
-    avatarUrl,
-    password
-  } = req.body
+//POST Register new user
+  .post('/register', async (req, res, next) => {
+    const {
+      username,
+      firstname,
+      lastname,
+      email,
+      phone,
+      password
+    } = req.body
+    const {error} = newUserValidation(req.body)
+    if(error) return res.status(400).send(error.details[0].message)
 
-  const saltHash = genPassword(password)
+    const uniqueEmail = await User.findOne({email: email})
 
-  const salt = saltHash.salt
-  const hash = saltHash.hash
+    if(uniqueEmail) return res.status(400).send('email already exists in database')
 
-  const newUser = new User({
-    username,
-    firstname,
-    lastname,
-    email,
-    phone,
-    avatarUrl,
-    hash: hash,
-    salt: salt
-  })
-  newUser.save()
-    .then((user) => {
-
-      const jwt = issueJWT(user)
-
-      res.json({success: true, user: user, token: jwt.token, expiresIn: jwt.expires })
+    const hashedPassword = await genPassword(password)
+    
+    const newUser = new User({
+      username,
+      firstname,
+      lastname,
+      email,
+      phone,
+      password: hashedPassword
     })
-    .catch(err => next(err))
-})
+    newUser.save((error, user) => {
+      if(error){
+        res.status(400).send(error)
+      } else {
+        const token = issueJWT(user)
+      
+      res.json({user: userMinusPassword, token: token})
+      .status(200)
+      }
+    
+    })
 
-.get('/not-authorized', (req, res, next) => {
-    console.log(`not authorized`)
-    res.status(401).send('Not authorized')
   })
 
-
-// .get('/current-user', requireAuth, currentUser)
-
-export default router
+  export default router

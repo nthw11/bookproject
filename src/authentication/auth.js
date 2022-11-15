@@ -1,37 +1,27 @@
-import jwt from 'jwt-simple'
-import User from '../models/User.js'
+import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
+import jsonwebtoken from 'jsonwebtoken'
 
+import * as dotenv from 'dotenv'
+dotenv.config()
 const secret = process.env.AUTH_SECRET
 
-const tokenForUser = (user) => {
-  return jwt.encode(
-    {
-      sub: user.id,
-      iat: Math.round(Date.now() / 1000),
-      exp: Math.round(Date.now() / 1000 * 60 * 60 * 10)
-    },
-    secret
-  )
+const genPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(password, salt)
+  return hashedPassword
 }
 
-const signin = (req, res, next) => {
-  res.send({
-    token: tokenForUser(req.user),
-    userID: req.user._id
-  })
-  console.log(`check`)
+const validatePassword = async (passwordString, passwordHash ) => {
+  const validatedPassword = await bcrypt.compare(passwordString, passwordHash)
+  return validatedPassword
+  
 }
 
-const currentUser = (req, res) => {
-  const user = {
-    username: req.user.username,
-    firstname: req.user.firstname,
-    lastname: req.user.lastname,
-    email: req.user.email,
-    avatarUrl: req.user.avatarUrl,
-    token: tokenForUser(req.user)
-  }
-  res.send(user)
+const issueJWT = (user) => {
+  const _id = user._id
+  const signedToken = jsonwebtoken.sign({_id}, secret)
+  return signedToken
 }
 
-export { signin, currentUser}
+export {genPassword, validatePassword, issueJWT}

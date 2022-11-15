@@ -1,11 +1,12 @@
 import express from 'express'
 import Board from '../models/Board.js'
 import Message from '../models/Message.js'
+import { verifyToken } from '../authentication/verifyToken.js'
 const router = express.Router()
 
 router
 //GET messages by boardId
-  .get('/:boardId', async (req, res, next ) => {
+  .get('/:boardId', verifyToken, async (req, res, next ) => {
     const boardId = req.params.boardId
     Board.findById(boardId)
     .populate('boardMessages')
@@ -20,7 +21,7 @@ router
   })
 
 //POST add message by boardId
-  .post('/:boardId', async (req, res, next) => {
+  .post('/:boardId', verifyToken, async (req, res, next) => {
     const boardId = req.params.boardId
     const {userId, text, tags} = req.body
     const newMessage = new Message({
@@ -49,7 +50,7 @@ router
   })
 
 //PUT edit message by boardId
-  .put('/:boardId/:messageId', async (req, res, next) => {
+  .put('/:boardId/:messageId', verifyToken, async (req, res, next) => {
     const {boardId, messageId} = req.params
     const { userId, text, tags } = req.body
     const messageToUpdate = Message.findById({ _id: messageId}, function(err, result){
@@ -73,7 +74,7 @@ router
     })
   })
 
-  .delete('/:boardId/:messageId', async (req, res, next) => {
+  .delete('/:boardId/:messageId', verifyToken, async (req, res, next) => {
     const {boardId, messageId} = req.params
     const { userId } = req.body
     Message.findById({_id: messageId}, function(err, result){
