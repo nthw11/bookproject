@@ -23,12 +23,9 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization, token"
   )
-  if ('OPTIONS' == req.method){
+  // if ('OPTIONS' == req.method){
     return res.sendStatus(200)
-  } else {
-
-    next()
-  }
+  // }
 })
 
 app.use(express.json())
