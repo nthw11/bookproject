@@ -56,5 +56,5 @@ app.use("/board", boardRoutes)
 app.use("/message", messageRoutes)
 
 export default app.listen(process.env.PORT || 8000, () =>{ 
-  console.log(`app is listening on port ${PORT}`)
+  // console.log(`app is listening on port ${PORT}`)
 })
