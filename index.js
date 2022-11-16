@@ -12,7 +12,7 @@ import messageRoutes from './src/routes/messages.js'
 import loginRoutes from './src/routes/login.js'
 
 const app = express()
-const PORT = process.env.PORT || 8000
+// const PORT = process.env.PORT || 8000
 
 connectDB()
 
@@ -43,6 +43,6 @@ app.use("/club", clubRoutes)
 app.use("/board", boardRoutes)
 app.use("/message", messageRoutes)
 
-export default app.listen(PORT, () =>{ 
+export default app.listen(process.env.PORT || 8000, () =>{ 
   console.log(`app is listening on port ${PORT}`)
 })
