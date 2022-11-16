@@ -12,7 +12,7 @@ import messageRoutes from './src/routes/messages.js'
 import loginRoutes from './src/routes/login.js'
 
 const app = express()
-const PORT = 8000
+const PORT = process.env.PORT || 8000
 
 connectDB()
 
