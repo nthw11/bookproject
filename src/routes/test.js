@@ -18,6 +18,7 @@ const router = express.Router()
 //   res.end()
 // })
 router.get('/', (req, res, next) => {
+  console.log('test route')
   res.send("working")
 })
 
