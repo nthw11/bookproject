@@ -1,6 +1,4 @@
 import express from 'express'
-// import passport from 'passport'
-
 import User from '../models/User.js'
 import { loginValidation, newUserValidation } from '../util/loginValidation.js'
 import { genPassword, validatePassword, issueJWT } from '../authentication/auth.js'
@@ -15,14 +13,16 @@ router
     const {username, password} = req.body
 
     await User.findOne({ username })
-    .then((user)=> {
+    .then(async (user)=> {
     if(!user){
       res.status(401).send("could not find user")
     }
-    validatePassword(password, user.password)
-    if(!validatePassword){
+    const passCheck = await validatePassword(password, user.password)
+    
+    if(!passCheck){
       res.status(401).send("password is incorrect")
     } else {
+      console.log('pass')
       const userMinusPassword = {
         _id: user._id,
         username: user.username,
@@ -78,6 +78,20 @@ router
       if(error){
         res.status(400).send(error)
       } else {
+        const userMinusPassword = {
+          _id: user._id,
+          username: user.username,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          phone: user.phone,
+          email: user.email,
+          contacts: user.contacts,
+          blockedContacts: user.blockedContacts,
+          clubs: user.clubs,
+          tags: user.tags,
+          allBooks: user.allBooks,
+          bookshelves: user.bookshelves
+       }
         const token = issueJWT(user)
       
       res.json({user: userMinusPassword, token: token})
