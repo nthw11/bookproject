@@ -3,7 +3,7 @@ import User from '../models/User.js'
 import Club from '../models/Club.js'
 import passport from 'passport'
 
-import { verifyToken } from '../authentication/verifyToken.js'
+import { verifyToken, tokenUser } from '../authentication/verifyToken.js'
 
 const requireAuth = passport.authenticate('jwt', {session: false})
 
@@ -20,26 +20,32 @@ router
       lastname,
       email,
       phone,
-      avatarUrl,
-      currentlyReading,
-      finishedReading
-      
     } = req.body
-    const update = {
-      firstname,
-      lastname,
-      email,
-      phone,
-      avatarUrl,
-      currentlyReading,
-      finishedReading,
-      
-    }
-    const updatedUser = await User.findByIdAndUpdate({_id: userId}, update, {new: true}, function (err, response) {
+
+    const updatedUser = User.findById({_id: userId}, function (err, response) {
       if(err){
         res.status(400).send(err)
       } else {
-        res.status(200).send(response)
+        if(firstname != ''){
+          response.firstname = firstname
+        }
+        if(lastname != ''){
+          response.lastname = lastname
+        }
+        if(phone != ''){
+          response.phone = phone
+        }
+        if(email != ''){
+          response.email = email
+        }
+        response.save((err, user) =>{
+          if(err) {
+            return next(err)
+          } else {
+            res.status(200).send(user)
+            
+          }
+        })
       }
     })
   })
@@ -152,7 +158,9 @@ router
   })
   // GET user by userId
   .get('/:userId', verifyToken, async (req, res, next) => {
-    const userId = req.params.userId
+    const userFromToken = tokenUser(req)
+    console.log(`userid`, userFromToken._id)
+    const userId = userFromToken._id
     User.findById(userId)
     .populate('currentlyReading')
     .populate('contacts')

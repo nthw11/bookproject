@@ -5,6 +5,8 @@ const verifyToken = (req, res, next) => {
   if(!token) return res.status(401).send('Access Denied')
   try{
     const verified = jsonwebtoken.verify(token, process.env.AUTH_SECRET)
+    const tokenElements = jsonwebtoken.decode(token, process.env.AUTH_SECRET)
+    console.log(tokenElements._id)
     req.user = verified
     next()
   } catch (err){
@@ -12,4 +14,12 @@ const verifyToken = (req, res, next) => {
   }
 }
 
-export { verifyToken }
+const tokenUser = (req) => {
+  const token = req.header('token')
+  
+    const userIdFromToken = jsonwebtoken.decode(token, process.env.AUTH_SECRET)
+    return userIdFromToken    
+  
+}
+
+export { verifyToken, tokenUser }
