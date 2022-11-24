@@ -61,7 +61,7 @@ router
 
 .put('/:userId/:bookId', verifyToken, async (req, res, next) => {
   const {userId, bookId} = req.params
-  const {newUserRating, newImageLink, newTags, newNotes} = req.body
+  const {newUserRating, newImageLink, newTags, newNotes, newCurrentlyReading} = req.body
   const numNewUserRating = parseInt(newUserRating)
   const bookToUpdate = Book.findById({_id:bookId}, function(err, result){
     if(newCurrentlyReading != null){

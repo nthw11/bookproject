@@ -6,7 +6,7 @@ const verifyToken = (req, res, next) => {
   try{
     const verified = jsonwebtoken.verify(token, process.env.AUTH_SECRET)
     const tokenElements = jsonwebtoken.decode(token, process.env.AUTH_SECRET)
-    console.log(tokenElements._id)
+    // console.log(tokenElements._id)
     req.user = verified
     next()
   } catch (err){

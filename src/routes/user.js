@@ -1,6 +1,7 @@
 import express from 'express'
 import User from '../models/User.js'
 import Club from '../models/Club.js'
+import Book from '../models/Book.js'
 import passport from 'passport'
 
 import { verifyToken, tokenUser } from '../authentication/verifyToken.js'
@@ -57,17 +58,27 @@ router
       newCurrentlyReading,
       newFinishedReading,
       newUpNext,
-      newBookshelf
+      newBookshelf,
+      outOfFinishedReading
     } = req.body
     User.findById({_id: userId}, function (err, result) {
       if(newCurrentlyReading != null){
         result.currentlyReading = newCurrentlyReading
       } 
-      // if (newCurrentlyReading == 'next') {
-      //   result.currentlyReading = ''
-      // }
+      if (newCurrentlyReading == 'next') {
+        result.currentlyReading = result.upNext.pop()
+      }
       if(newFinishedReading != null){
-        result.finishedReading.push(newFinishedReading)
+        // result.finishedReading.push(newFinishedReading)
+        // result.allBooks.pull(newFinishedReading)
+        // result.upNext.pull(newFinishedReading)
+        Book.findByIdAndUpdate(newFinishedReading, {$push: {tags: "Read"}}, function(err, res){
+          if(err){
+            console.log(err)
+          } else {
+            console.log(res)
+          }
+        } )
       }
       if(newUpNext != null){
         const newArray = []
@@ -91,6 +102,17 @@ router
         })
         // result.upNext.push(newUpNext)
         result.bookshelves = newArray
+      }
+      if(outOfFinishedReading != null){
+        // result.allBooks.push(outOfFinishedReading)
+        // result.finishedReading.pull(outOfFinishedReading)
+        Book.findByIdAndUpdate(outOfFinishedReading, {$pull: {tags: "Read"}}, function(err, res){
+          if(err){
+            console.log(err)
+          } else {
+            console.log(res)
+          }
+        } )
       }
       result.save((err, user) => {
         if(err)  {
@@ -159,10 +181,10 @@ router
   // GET user by userId
   .get('/:userId', verifyToken, async (req, res, next) => {
     const userFromToken = tokenUser(req)
-    console.log(`userid`, userFromToken._id)
     const userId = userFromToken._id
     User.findById(userId)
     .populate('currentlyReading')
+    .populate('finishedReading')
     .populate('contacts')
     .populate('clubs')
     .populate('allBooks')
