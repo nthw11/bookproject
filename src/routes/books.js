@@ -103,7 +103,6 @@ router
         if(book._id != bookId){
           updatedBooksArr.push(book)
         }
-        
       })
     user.allBooks = updatedBooksArr
     await user.save()

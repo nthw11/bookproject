@@ -59,24 +59,37 @@ router
       newFinishedReading,
       newUpNext,
       newBookshelf,
-      outOfFinishedReading
+      outOfFinishedReading,
+      moveFromUpNext
     } = req.body
     User.findById({_id: userId}, function (err, result) {
       if(newCurrentlyReading != null){
+        const newArray = []
         result.currentlyReading = newCurrentlyReading
+        result.upNext.filter(book => {
+          if(book != newCurrentlyReading){
+            newArray.push(book)
+          }
+        })
+        result.upNext = newArray
       } 
-      if (newCurrentlyReading == 'next') {
-        result.currentlyReading = result.upNext.pop()
+      if (moveFromUpNext == 'next') {
+        if(result.upNext.length != 0 ){
+          console.log(result.upNext)
+          result.currentlyReading = result.upNext.pop()
+        } else {
+          console.log('null')
+          result.currentlyReading = null;
+          console.log(result.currentlyReading)
+        }
       }
       if(newFinishedReading != null){
-        // result.finishedReading.push(newFinishedReading)
-        // result.allBooks.pull(newFinishedReading)
-        // result.upNext.pull(newFinishedReading)
         Book.findByIdAndUpdate(newFinishedReading, {$push: {tags: "Read"}}, function(err, res){
           if(err){
             console.log(err)
           } else {
-            console.log(res)
+            console.log('user.js 79')
+            res.save();
           }
         } )
       }
@@ -110,7 +123,7 @@ router
           if(err){
             console.log(err)
           } else {
-            console.log(res)
+            console.log('user.js 113')
           }
         } )
       }
