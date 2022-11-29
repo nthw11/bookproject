@@ -6,6 +6,7 @@ import passport from 'passport'
 
 import { verifyToken, tokenUser } from '../authentication/verifyToken.js'
 
+
 const requireAuth = passport.authenticate('jwt', {session: false})
 
 const router = express.Router()
@@ -98,7 +99,7 @@ router
         newArray.push(newUpNext)
         result.upNext.filter(upNextBook => {
           if(upNextBook != newUpNext){
-            newArray.push(upNextBook)
+            newArray.unshift(upNextBook)
           }
         })
         // result.upNext.push(newUpNext)
@@ -137,6 +138,19 @@ router
         }
       })
     })
+  })
+  .put('/:userId/upnext-update', verifyToken, (req,res,next) => {
+    const userId = req.params.userId
+    const reorderedUpNext = req.body.reorderedUpNext
+    User.findById({_id: userId}, function (err, result) {
+      // console.log(result.upNext)
+      result.upNext = reorderedUpNext
+      console.log(`reordered`)
+      // console.log(reorderedUpNext)
+      result.save()
+    }
+    )
+    
   })
 
   // PUT add or update books to bookshelves
