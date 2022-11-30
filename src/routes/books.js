@@ -70,11 +70,7 @@ router
     if(newUserRating != null){
       result.userRating = newUserRating
     }
-    // if(newFinishedReading != null){
-    //   console.log(newFinishedReading)
-    //   result.finishedReading.push(newFinishedReading)
-    //   console.log(result.finishedReading)
-    // }
+
     if(newImageLink != null){
       result.imageLink = newImageLink
     }

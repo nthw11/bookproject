@@ -22,7 +22,6 @@ router
     if(!passCheck){
       res.status(401).send("password is incorrect")
     } else {
-      console.log('pass')
       const userMinusPassword = {
         _id: user._id,
         username: user.username,

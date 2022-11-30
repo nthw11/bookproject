@@ -76,20 +76,15 @@ router
       } 
       if (moveFromUpNext == 'next') {
         if(result.upNext.length != 0 ){
-          console.log(result.upNext)
           result.currentlyReading = result.upNext.pop()
         } else {
-          console.log('null')
           result.currentlyReading = null;
-          console.log(result.currentlyReading)
         }
       }
       if(newFinishedReading != null){
         Book.findByIdAndUpdate(newFinishedReading, {$push: {tags: "Read"}}, function(err, res){
           if(err){
-            console.log(err)
           } else {
-            console.log('user.js 79')
             res.save();
           }
         } )
@@ -132,7 +127,6 @@ router
         if(err)  {
           return next(err)
         } else {
-          // console.log(`updated`)
           res.status(200)
           .send(user)
         }
@@ -143,10 +137,7 @@ router
     const userId = req.params.userId
     const reorderedUpNext = req.body.reorderedUpNext
     User.findById({_id: userId}, function (err, result) {
-      // console.log(result.upNext)
       result.upNext = reorderedUpNext
-      console.log(`reordered`)
-      // console.log(reorderedUpNext)
       result.save()
     }
     )
