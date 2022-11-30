@@ -10,20 +10,22 @@ router
   .post('/:userId', verifyToken, async (req, res, next) => {
     const userId = req.params.userId
     const {
-      clubName
+      clubName,
+      publicClub
     } = req.body
-    const newBoard = await new Board({
+    new Board({
       boardName: `${clubName} Board`
     }).save(async (err, board) => {
       if(err){
         return next(err)
       } else {
         // res.status(200)
-        const newClub = await new Club({
+        new Club({
           clubName: clubName,
           clubOwner: userId,
           clubMembers: [userId],
-          clubBoards: [board]
+          clubBoards: [board],
+          publicClub: publicClub
         }).save((err, club) => {
           if(err){
             return next(err)
@@ -33,7 +35,7 @@ router
             User.findByIdAndUpdate({_id: userId}, { $push: {clubs: [club._id]}}, {new: true})
             .exec((err, club) => {
               if(err) return next(err)
-              res.status(200).send(club).end()
+              // res.status(200).send(club).end()
             })
           }
         })
@@ -59,6 +61,7 @@ router
   .get('/id/:clubId', verifyToken, async (req, res, next) => {
     const clubId = req.params.clubId
     Club.find({ _id: clubId})
+    .populate('clubBoards')
     .exec((err, club) => {
       if(err){
         res.status(400).send(err)

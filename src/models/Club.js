@@ -6,6 +6,8 @@ const ClubSchema = new Schema({
   clubOwner: {type: Schema.Types.ObjectId, ref: 'User'},
   clubMembers: [{type: Schema.Types.ObjectId, ref: 'User'}],
   clubBoards: [{type: Schema.Types.ObjectId, ref: 'Board'}],
+  // clubReading: {type: Schema.Types.ObjectId, ref: 'Book'},
+  publicClub: {type: Boolean, required: true}
 })
 
 export default mongoose.model('Club', ClubSchema)
