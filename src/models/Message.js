@@ -3,16 +3,19 @@ const Schema = _Schema
 
 const MessageSchema = new Schema({
   messageAuthor: {type: Schema.Types.ObjectId, ref: 'User' },
+  stringAuthor: {type: String},
   messageText: {type: String},
-  messageTimestamp: {type: Date},
   messageTags: [{type: String}],
   messageComments: [
     {
       commentText: {type: String},
       commentUser: {type: String},
-      commentTimestamp: {type: Date}
-    }
+      // commentTimestamp: {type: Date}
+    },
+    {timestamps: true}
   ]
-})
+},
+{timestamps: true,}
+)
 
 export default mongoose.model('Message', MessageSchema)

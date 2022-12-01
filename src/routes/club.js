@@ -61,7 +61,16 @@ router
   .get('/id/:clubId', verifyToken, async (req, res, next) => {
     const clubId = req.params.clubId
     Club.find({ _id: clubId})
-    .populate('clubBoards')
+    // .populate('clubBoards')
+    .populate({
+      path: 'clubBoards',
+      model: 'Board',
+      populate: {
+        path: 'boardMessages',
+        model: 'Message'
+      }
+    })
+
     .exec((err, club) => {
       if(err){
         res.status(400).send(err)

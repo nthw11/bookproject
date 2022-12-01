@@ -23,11 +23,12 @@ router
 //POST add message by boardId
   .post('/:boardId', verifyToken, async (req, res, next) => {
     const boardId = req.params.boardId
-    const {userId, text, tags} = req.body
+    const {userId, text, tags, stringAuthor} = req.body
     const newMessage = new Message({
       messageAuthor: userId,
+      stringAuthor: stringAuthor,
       messageText: text,
-      messageTimestamp: new Date(),
+      // messageTimestamp: new Date(),
       messageTags: tags
     }).save((err, message) => {
       if(err){
