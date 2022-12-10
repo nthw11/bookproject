@@ -11,6 +11,7 @@ router
     const userId = req.params.userId
     const {
       clubName,
+      newMember,
       publicClub
     } = req.body
     new Board({
@@ -23,7 +24,7 @@ router
         new Club({
           clubName: clubName,
           clubOwner: userId,
-          clubMembers: [userId],
+          clubMembers: newMember,
           clubBoards: [board],
           publicClub: publicClub
         }).save((err, club) => {

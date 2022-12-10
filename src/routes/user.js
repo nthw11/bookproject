@@ -220,17 +220,17 @@ router
   //PUT add user to club
   .put('/:userId/club', verifyToken, async (req, res, next) => {
     const userId = req.params.userId
-    const clubId = req.body.clubId
+    const {clubId, newMember} = req.body
     User.findByIdAndUpdate({_id: userId}, {$push: {clubs: [clubId]}})
     .exec((err, user) => {
       if(err){
         res.status(400).send(err)
         return next(err)
       } else {
-        Club.findByIdAndUpdate({_id: clubId}, {$push: {clubMembers: [userId]}})
+        Club.findByIdAndUpdate({_id: clubId}, {$push: {clubMembers: newMember}})
         .exec((err, club) => {
           if(err){
-            res.status(400).send(err)
+            // res.status(400).send(err)
             return next(err)
           } 
         })
