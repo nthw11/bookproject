@@ -16,9 +16,9 @@ router
     .then(async (user)=> {
     if(!user){
       res.status(401).send("could not find user")
-    }
-    const passCheck = await validatePassword(password, user.password)
+    } else {
     
+    const passCheck = await validatePassword(password, user.password)
     if(!passCheck){
       res.status(401).send("password is incorrect")
     } else {
@@ -45,7 +45,7 @@ router
       
     }
     
-
+  }
   })
 })
 
